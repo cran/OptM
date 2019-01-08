@@ -1,0 +1,17 @@
+citHeader("To cite optM in publications use:")
+
+citEntry(entry = "Article",
+  title        = "optM: an R package to optimize the number of migration edges using threshold models",
+  author       = personList(as.person("Robert R. Fitak")),
+  journal      = "Journal of Heredity",
+  year         = "submitted",
+  volume       = "na",
+  number       = "na",
+  pages        = "na",
+  url          = "na",
+
+  textVersion  =
+  paste("Fitak, R. R. (submitted).",
+        "optM: an R package to optimize the number of migration edges using threshold models.",
+        "Journal of Heredity")
+)
