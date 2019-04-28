@@ -3,7 +3,7 @@
 Estimating the optimal number of migration edges from Treemix
 
 ## Description
-This package uses results from the population software 'Treemix' by [Pickrell and Pritchard (2002) DOI:10.1371/journal.pgen.1002967](http://doi.org/10.1371/journal.pgen.1002967) to estimate the optimal number of migrations edges to add to the tree. Previously, it was customary to stop adding migration edges when 99.8\% of variation in the data was explained, but optM automates this process using an _ad hoc_ statistic based on the second order rate of change in the log likelihood.  OptM has added functionality for various threshold modeling to compare with the ad hoc statistic.  The various methods are:
+This package uses results from the population software 'Treemix' by [Pickrell and Pritchard (2012) DOI:10.1371/journal.pgen.1002967](https://doi.org/10.1371/journal.pgen.1002967) to estimate the optimal number of migrations edges to add to the tree. Previously, it was customary to stop adding migration edges when 99.8\% of variation in the data was explained, but optM automates this process using an _ad hoc_ statistic based on the second order rate of change in the log likelihood.  OptM has added functionality for various threshold modeling to compare with the ad hoc statistic.  The various methods are:
 
 - "Evanno" - calculates an _ad hoc_ statistic we call deltaM based on the Evanno method, or second-order rate of change in likelihood weighted by the standard deviation.
 - "linear" - estimates of the optimal M based on a piecewise linear (change point), bent cable (alpha), simple exponential (threshold, default 5\%), or non-linear least squares (threshold, default 5\%) models
@@ -17,11 +17,11 @@ This package uses results from the population software 'Treemix' by [Pickrell an
   * Load the package into your working R environment using `library(OptM)`
 
 ## Preparing the input files
-To run OptM, you will need a folder of output files produced by Treemix v1.13.  The function optM will automatically search the folder for the _stem.llik_, _stem.modelcov.gz_, and _stem.cov.gz_ files; where "_stem_" is that provided to the _-o_ parameter of _treemix_.  This _stem_ must be in the format _stem_\._M_\._i_; where
+To run OptM, you will need a folder of output files produced by Treemix v1.13.  The function optM will automatically search the folder for the _stem.llik_, _stem.modelcov.gz_, and _stem.cov.gz_ files; where "_stem_" is that provided to the _-o_ parameter of _treemix_.  It is recommended, but not required, to use _stem_ in the format _stem_\._i_\._M_; where
 
 - _stem_ is any name you prefer
-- _M_ is the number of migration edges used for the treemix run (_-m_ parameter)
 - _i_ is the iteration number for that value of _M_
+- _M_ is the number of migration edges used for the treemix run (_-m_ parameter)
 
 In order for optM to function properly, you must run:
 
@@ -40,7 +40,7 @@ for m in {1..10}
       do
       treemix \
          -i test.treemix.gz \
-         -o test.${m}.${i} \
+         -o test.${i}.${m} \
          -global \
          -m ${m} \
          -k 1000
@@ -69,6 +69,11 @@ done
   
 
 # Version History
+- Version 0.1.3, 2019/4/23
+  * The read.treemix function now searches for all treemix input files, and the specially formatted _stem_ is no longer required.  Thanks Jie Zhong!!!
+- Version 0.1.2, 2019/3/1
+  * Fixed typo in DESCRIPTION - Pickrell and Pritchard 2012, not 2002
+  * In the `plot_optM`, changed the plotting color to have an alpha (semi-transparent) fill and Y-axis labels for Δm
 - Version 0.1.1, 2019/1/2
   * Released the first version
 

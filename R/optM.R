@@ -43,7 +43,7 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
  
     # ... are option to pass to the function 'SiZer'
 
-	# Load .llik input files
+	# Load treemix input files
 	tbl = read.treemix(folder)
 	#Sys.sleep(2)
 	
@@ -74,11 +74,11 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
 	# Reduce table to two columns: m and lnpd
 	M <- NULL  # avoids variable scope error with 'subset' and CRAN submission
 	LnPD <- NULL  # avoids variable scope error with 'subset' and CRAN submission
-	tbl = tbl[,c(4,7)]
+	# tbl = tbl[,c(4,7)] # old v0.1.1
 	if (any(is.na(tbl))) stop("Error: One or more likelihoods are \"NaN\", please check datafiles and/or repeat the treemix run!\n")
-	colnames(tbl) <- c("M", "LnPD")
-	m = max(tbl[,1], na.rm = T)
-	low = min(tbl[,1], na.rm = T)
+	# colnames(tbl) <- c("M", "LnPD") # old v0.1.1
+	m = max(tbl[,2], na.rm = T)
+	low = min(tbl[,2], na.rm = T)
 	
 	# Get number of iterations per value of m
 	runs = vector()
@@ -99,31 +99,37 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
 	message("Make sure these values are correct...\n")
 	#Sys.sleep(2)
 	
+	############### Old code from v0.1.1 ###############
 	# Check the cov.gz and modelcov.gz files
-	cov.files = list.files(path = folder, pattern = "\\.cov.gz", full.names = T)
-	modelcov.files = list.files(path = folder, pattern = "\\.modelcov.gz", full.names = T)
-	if(length(cov.files) != length(modelcov.files)) stop("Error: Could not find the same number of .cov.gz and .modelcov.gz files.\n")
-	cov.files = sort(unlist(lapply(cov.files, find.cov)))
-	modelcov.files =  sort(unlist(lapply(modelcov.files, find.modelcov)))
-	if(!all(cov.files == modelcov.files)) stop("Error:  The .cov.gz and .modelcov.gz files do not all match up properly")
-	stem = unique(sub("\\..*\\..*", "", c(cov.files, modelcov.files)))
-	if (is.null(stem) | length(stem) != 1 | !is.character(stem)) stop("Error: The file stem name was not correctly identified. Check naming convention\n")
+	#cov.files = list.files(path = folder, pattern = "\\.cov.gz", full.names = T)
+	#modelcov.files = list.files(path = folder, pattern = "\\.modelcov.gz", full.names = T)
+	#if(length(cov.files) != length(modelcov.files)) stop("Error: Could not find the same number of .cov.gz and .modelcov.gz files.\n")
+	#cov.files = sort(unlist(lapply(cov.files, find.cov)))
+	#modelcov.files =  sort(unlist(lapply(modelcov.files, find.modelcov)))
+	#if(!all(cov.files == modelcov.files)) stop("Error:  The .cov.gz and .modelcov.gz files do not all match up properly")
+	#stem = unique(sub("\\..*\\..*", "", c(cov.files, modelcov.files)))
+	#if (is.null(stem) | length(stem) != 1 | !is.character(stem)) stop("Error: The file stem name was not correctly identified. Check naming convention\n")
 
-    # Get the variation explained by each model
-	var.expl = data.frame()
-	for (i in 1:m){
-		for (n in 1:runs[m]){
-		stem1 = paste(folder, "/", stem, ".",n, ".",i, sep = "")
-		if (!file.exists(paste0(stem1, ".cov.gz"))) next
-		if (!file.exists(paste0(stem1, ".modelcov.gz"))) next
-		var.expl = rbind(var.expl,c(n, i, get_f(stem1)))
-		}
-	}
-	colnames(var.expl) = c("run", "m", "f")
+    ## Get the variation explained by each model
+	#var.expl = data.frame()
+	#for (i in 1:m){
+	#	for (n in 1:runs[m]){
+	#	stem1 = paste(folder, "/", stem, ".",n, ".",i, sep = "")
+	#	if (!file.exists(paste0(stem1, ".cov.gz"))) next
+	#	if (!file.exists(paste0(stem1, ".modelcov.gz"))) next
+	#	var.expl = rbind(var.expl,c(n, i, get_f(stem1)))
+	#	}
+	#}
+	#colnames(var.expl) = c("run", "m", "f")
+	############### Old code from v0.1.1 ###############
 	
+	# Get the variation explained by each model
+	Variation = apply(tbl, 1, function (x) get_f(paste0(folder, "/",x[1])))
+    tbl = cbind(tbl, Variation)
+
 	# Get the mean and standard deviation of % variation explained across runs per m
-	f = c(NA, stats::aggregate(var.expl, by = list(var.expl$m), mean, na.rm = T)$f)
-	sdf = c(NA, stats::aggregate(var.expl, by = list(var.expl$m), stats::sd, na.rm = T)$f)
+    f = c(NA, stats::aggregate(Variation ~ M, tbl, mean, na.rm = T)$Variation)[-2]
+    sdf = c(NA, stats::aggregate(Variation ~ M, tbl, stats::sd, na.rm = T)$Variation)[-2]
 
 	
 	######################  Now separate based on method chosen  #############################################
@@ -287,25 +293,48 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
 ####### Other Functions #######
 ###############################
 
-# Read in treemix .llik files
+# Read in treemix files
 read.treemix <- function(folder){
+
 	# Check input parameters
 	if (is.null(folder) | length(folder) != 1 | !is.character(folder)) stop("No input folder correctly provided.\n")	
 
-	# Gather output files into table
-	fileList = list.files(path = folder, pattern = ".llik", full.names = T)
+	# Gather .llik, .modelcov.gz, and .cov.gz output files form treemix
+	files.lik = sort(list.files(path = folder, pattern = "\\.llik", full.names = F))
+        files.mcov = sort(list.files(path = folder, pattern = "\\.modelcov\\.gz", full.names = F))
+        files.cov = sort(list.files(path = folder, pattern = "\\.cov\\.gz", full.names = F))
+
+        # Check that the number of files are found for each and the names match.
+        if (length(files.lik) != length(files.mcov) | length(files.lik) != length(files.cov) | length(files.cov) != length(files.mcov)) stop("No input files not correctly identified.  The number of .llik, .modelcov, and .cov files do not match!.\n")
+
+        len = length(files.lik)
+        stem = c(files.lik, files.mcov, files.cov)
+        stem = gsub("\\.llik", "", stem)
+        stem = gsub("\\.modelcov\\.gz", "", stem)
+        stem = gsub("\\.cov\\.gz", "", stem)
+        stem = unique(sort(stem))
+        if (length(stem) != len) stop("Problem in identifying the input files correctly.  Please check that the same number of .llik, .modelcov, and .cov files are present\n")
+
+        # Setup table of files, 
 	tbl = data.frame()
 
-	for (i in 1:length(fileList)){
-		info = file.info(fileList[i])
-		if (info$size == 0) stop("At least one of the .llik files is empty. Check results\n")
-		tbl = rbind(tbl, utils::read.table(fileList[i], header = F, sep = " "))
+        # Read through each file to check that it is not empty, extract M and likelihoods
+	for (i in 1:length(stem)){
+		size.lik = file.info(paste0(folder, "/", stem[i], ".llik"))$size
+		size.mcov = file.info(paste0(folder, "/", stem[i], ".modelcov.gz"))$size
+		size.cov = file.info(paste0(folder, "/", stem[i], ".cov.gz"))$size
+		if (size.lik == 0) stop("At least one of the .llik files is empty. Check results\n")
+		if (size.mcov == 0) stop("At least one of the .modelcov.gz files is empty. Check results\n")
+		if (size.cov == 0) stop("At least one of the .cov.gz files is empty. Check results\n")
+                id = paste0(folder, "/", stem[i], ".llik")
+		tbl = rbind(tbl, cbind(rep(stem[i],2),utils::read.table(id, header = F, sep = " ")[,c(4,7)]))
 	}
+        colnames(tbl) = c("Stem", "M", "LnPD")
 	
 	if (length(tbl) == 0){
-		stop("Could not properly load .llik files\n")
+		stop("Could not properly load input files\n")
 		} else {
-			message("Finished reading .llik (likelihood) files.\n")
+			message("Finished reading .llik, .modelcov.goz, and .cov.gz files.\n")
 		}
 	
 	return(tbl)

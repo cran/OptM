@@ -92,7 +92,8 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 	
 		  # Plot variation explained on second Y axis
 		  graphics::par(new = T)
-		  plot(input$m, f.means, pch = 1, col = "red", axes = F, ann = F)
+		  # plot(input$m, f.means, pch = 1, col = "red", axes = F, ann = F) # v0.1.1
+		  plot(input$m, f.means, pch = 19, col=grDevices::rgb(255/255,0,0,89.25/255), axes = F, ann = F)
 		  graphics::axis(4, las = 1)
 		  graphics::mtext("Variance Explained", side = 4, line = 3.5)
 	
@@ -111,10 +112,11 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 		     input$m + epsilon, f.means - f.sd, col = "red")
 		  graphics::segments(input$m - epsilon, f.means + f.sd,
 		     input$m + epsilon, f.means + f.sd, col = "red")
-		  graphics::legend("bottomright", legend = c("likelihoods +/- SD", "% variance", "99.8% threshold"), col = c("black", "red", "black"), bty = "n", pch = c(1, 1, NA), lty = c(NA, NA, "dotted"))
+		  graphics::legend("bottomright", legend = c("likelihoods +/- SD", "% variance", "99.8% threshold"), col = c("black", grDevices::rgb(255/255,0,0,89.25/255), "black"), bty = "n", pch = c(1, 19, NA), lty = c(NA, NA, "dotted"))
 		
 		  # Draw second plot of delta m
-		  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m", ylab = "Delta m")
+		  # plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m", ylab = "Delta m") #v0.1.1
+		  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m", ylab = expression(italic(paste(symbol(Delta),"m"))))
 		  graphics::points(input$m, input$Deltam, col = "blue", type = "l")
 		  grDevices::dev.off()
 	   } else {
@@ -143,7 +145,8 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 	
 	  # Plot variation explained on second Y axis
 	  graphics::par(new = T)
-	  plot(input$m, f.means, pch = 1, col = "red", axes = F, ann = F)
+	  # plot(input$m, f.means, pch = 1, col = "red", axes = F, ann = F) #v0.1.1
+	  plot(input$m, f.means, pch = 19, col = grDevices::rgb(255/255,0,0,89.25/255), axes = F, ann = F)
 	  graphics::axis(4, las = 1)
 	  graphics::mtext("Variance Explained", side = 4, line = 3.5)
 	
@@ -162,10 +165,10 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 		input$m + epsilon, f.means - f.sd, col = "red")
 	  graphics::segments(input$m - epsilon, f.means + f.sd,
 		input$m + epsilon, f.means + f.sd, col = "red")
-	  graphics::legend("bottomright", legend = c("likelihoods +/- SD", "% variance", "99.8% threshold"), col = c("black", "red", "black"), bty = "n", pch = c(1, 1, NA), lty = c(NA, NA, "dotted"))
+	  graphics::legend("bottomright", legend = c("likelihoods +/- SD", "% variance", "99.8% threshold"), col = c("black", grDevices::rgb(255/255,0,0,89.25/255), "black"), bty = "n", pch = c(1, 19, NA), lty = c(NA, NA, "dotted"))
 		
 	  # Draw second plot of delta m
-	  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m (migration edges)", ylab = "Delta m")
+	  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m (migration edges)", ylab = expression(italic(paste(symbol(Delta),"m"))))
 	  graphics::points(input$m, input$Deltam, col = "blue", type = "l")
 	  
 	  if(!is.null(pdf)){
