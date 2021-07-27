@@ -1,9 +1,9 @@
-98116c545ab673b6ba622643ed95d7da *DESCRIPTION
+83c110c2f539661db1afa8ac9f77d2bd *DESCRIPTION
 2ad2cfb7f8a895ea89026940679cca86 *NAMESPACE
-eaee8362c70336ef35adfde0f6fa1bb7 *R/optM.R
-1d641e2d76bc435677afb6a46ca4480e *R/plot_optM.R
-eb1880014c411b170a1780d8a3733755 *README.md
-12d126ed7b21379cbe86f1691fea6477 *inst/CITATION
+adafd0ff22ce8b2174422d796995197e *R/optM.R
+92aad8d4d7ae9e140fac1ad77d8160dd *R/plot_optM.R
+67f76c1cf27e05f3d88ea4d26651f4d3 *README.md
+c2c87f2ed3d3d7381879b40f7cee3e13 *inst/CITATION
 65a88a49eb74ed65e59872106177a4ef *inst/extdata/M3.1.1.cov.gz
 97348a8e925830f9fe1cda4cf9d75317 *inst/extdata/M3.1.1.llik
 25ecc7540f347ee160e9206a01d84185 *inst/extdata/M3.1.1.modelcov.gz
@@ -304,5 +304,5 @@ bfe6591ee4fd52103bc7c710a4696a0c *inst/extdata/M3.9.8.modelcov.gz
 d146280ea47e627aeb80e2b0bc16d12f *inst/extdata/M3.9.9.cov.gz
 083a6491e79dc37ccb15c0af574fbeec *inst/extdata/M3.9.9.llik
 7389cbd49d492d4f5e80abe33ba97944 *inst/extdata/M3.9.9.modelcov.gz
-b402425fc1458102b1daab9d20576e3b *man/optM.Rd
+6768fd4066e79bd9f86331a1e029e18f *man/optM.Rd
 23f7bc3f0a0e560317ac42964fb3ad88 *man/plot_optM.Rd

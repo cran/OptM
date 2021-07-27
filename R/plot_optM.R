@@ -116,7 +116,7 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 		
 		  # Draw second plot of delta m
 		  # plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m", ylab = "Delta m") #v0.1.1
-		  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m", ylab = expression(italic(paste(symbol(Delta),"m"))))
+		  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = expression(italic("m")*' (migration edges)'), ylab = expression(italic(paste(symbol(Delta),"m"))), las = 1)
 		  graphics::points(input$m, input$Deltam, col = "blue", type = "l")
 		  grDevices::dev.off()
 	   } else {
@@ -168,7 +168,7 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 	  graphics::legend("bottomright", legend = c("likelihoods +/- SD", "% variance", "99.8% threshold"), col = c("black", grDevices::rgb(255/255,0,0,89.25/255), "black"), bty = "n", pch = c(1, 19, NA), lty = c(NA, NA, "dotted"))
 		
 	  # Draw second plot of delta m
-	  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = "m (migration edges)", ylab = expression(italic(paste(symbol(Delta),"m"))))
+	  plot(input$m, input$Deltam, col = "blue", pch = 19, xlab = expression(italic("m")*' (migration edges)'), ylab = expression(italic(paste(symbol(Delta),"m"))), las = 1)
 	  graphics::points(input$m, input$Deltam, col = "blue", type = "l")
 	  
 	  if(!is.null(pdf)){

@@ -4,15 +4,27 @@
 \alias{optM}
 \title{optM function}
 \usage{
-optM(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...)
+optM(
+  folder,
+  orientagraph = F,
+  tsv = NULL,
+  method = "Evanno",
+  ignore = NULL,
+  thresh = 0.05,
+  ...
+)
 }
 \arguments{
 \item{folder}{A character string of the path to a directory containing .llik, .cov.gz and .modelcov.gz files produced by Treemix}
+
+\item{orientagraph}{A logical indicating whether the files were produced from Treemix (FALSE) or OrientAGraph (TRUE). Default = F}
 
 \item{tsv}{a string defining the name of the tab-delimited output file.
 If NULL (default), then no data file is produced.}
 
 \item{method}{a string containing the method to use, either "Evanno", "linear", or "SiZer".  Default is "Evanno".}
+
+\item{ignore}{a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (ignore = 0).  Default is NULL.}
 
 \item{thresh}{a numeric value between 0 and 1 for the threshold to use for the proportion of increase
 in likelihood that defines when a plateau is reached.  Default is 0.05 (5\%), only applicable for method = "linear".}

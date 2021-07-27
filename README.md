@@ -3,7 +3,7 @@
 Estimating the optimal number of migration edges from Treemix
 
 ## Description
-This package uses results from the population software 'Treemix' by [Pickrell and Pritchard (2012) DOI:10.1371/journal.pgen.1002967](https://doi.org/10.1371/journal.pgen.1002967) to estimate the optimal number of migrations edges to add to the tree. Previously, it was customary to stop adding migration edges when 99.8\% of variation in the data was explained, but optM automates this process using an _ad hoc_ statistic based on the second order rate of change in the log likelihood.  OptM has added functionality for various threshold modeling to compare with the ad hoc statistic.  The various methods are:
+This package uses results from the population software 'Treemix' by [Pickrell and Pritchard (2012) DOI:10.1371/journal.pgen.1002967](https://doi.org/10.1371/journal.pgen.1002967) to estimate the optimal number of migrations edges to add to the tree. Furthermore, it has also been updated to work with the output of [OrientAGraph](https://github.com/sriramlab/OrientAGraph) (see [Molloy et al. 2021](https://doi.org/10.1101/2021.02.02.429467)), a more advanced admixture graph representation software built on top of the 'Treemix' engine. In Treemix, it was customary to stop adding migration edges when 99.8\% of variation in the data was explained, but optM automates this process using an _ad hoc_ statistic based on the second order rate of change in the log likelihood.  OptM has added functionality for various threshold modeling to compare with the ad hoc statistic.  The various methods are:
 
 - "Evanno" - calculates an _ad hoc_ statistic we call deltaM based on the Evanno method, or second-order rate of change in likelihood weighted by the standard deviation.
 - "linear" - estimates of the optimal M based on a piecewise linear (change point), bent cable (alpha), simple exponential (threshold, default 5\%), or non-linear least squares (threshold, default 5\%) models
@@ -17,7 +17,7 @@ This package uses results from the population software 'Treemix' by [Pickrell an
   * Load the package into your working R environment using `library(OptM)`
 
 ## Preparing the input files
-To run OptM, you will need a folder of output files produced by Treemix v1.13.  The function optM will automatically search the folder for the _stem.llik_, _stem.modelcov.gz_, and _stem.cov.gz_ files; where "_stem_" is that provided to the _-o_ parameter of _treemix_.  It is recommended, but not required, to use _stem_ in the format _stem_\._i_\._M_; where
+To run OptM, you will need a folder of output files produced by Treemix v1.13 or OrientAGraph.  The function optM will automatically search the folder for the _stem.llik_, _stem.modelcov.gz_, and _stem.cov.gz_ files; where "_stem_" is that provided to the _-o_ parameter of _treemix_.  It is recommended, but not required, to use _stem_ in the format _stem_\._i_\._M_; where
 
 - _stem_ is any name you prefer
 - _i_ is the iteration number for that value of _M_
@@ -69,6 +69,12 @@ done
   
 
 # Version History
+- Version 0.1.5, 2021/7/9
+  * Added capability to work with OrientAGraph output. Thanks Cui Wang!
+- Version 0.1.4, 2019/7/1
+  * Fixed typos
+  * Squashed a plotting bug (changed Y axis labels to horizontal)
+  * Added 'ignore' parameter for when running Treemix with preset or fixed migration edges or input tree.
 - Version 0.1.3, 2019/4/23
   * The read.treemix function now searches for all treemix input files, and the specially formatted _stem_ is no longer required.  Thanks Jie Zhong!!!
 - Version 0.1.2, 2019/3/1
@@ -79,13 +85,13 @@ done
 
 
 ## Citation
-Fitak, R. R. (2018) optM: an R package to optimize the number of migration edges using threshold models. Journal of Heredity [in prep]
+Fitak, R. R. (2021) optM: an R package to optimize the number of migration edges using threshold models. [in prep]
 
 - Or enter the command `citation("OptM")` into your R console
 
 ## Contact
 Robert Fitak  
 Department of Biology  
-Duke University  
+University of Central Florida  
 USA  
 rfitak9@gmail.com  

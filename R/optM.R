@@ -2,9 +2,11 @@
 #'
 #' Load a folder of .llik files from the program Treemix and determine the optimal number of migration edges to include
 #' @param folder A character string of the path to a directory containing .llik, .cov.gz and .modelcov.gz files produced by Treemix
+#' @param orientagraph A logical indicating whether the files were produced from Treemix (FALSE) or OrientAGraph (TRUE). Default = F
 #' @param tsv a string defining the name of the tab-delimited output file.
 #' If NULL (default), then no data file is produced.
 #' @param method a string containing the method to use, either "Evanno", "linear", or "SiZer".  Default is "Evanno".
+#' @param ignore a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (ignore = 0).  Default is NULL.
 #' @param thresh a numeric value between 0 and 1 for the threshold to use for the proportion of increase
 #' in likelihood that defines when a plateau is reached.  Default is 0.05 (5\%), only applicable for method = "linear".
 #' @param ... other options sent to the function "SiZer" - see the R package 'SiZer'
@@ -39,12 +41,12 @@
 #' # To view the results from the SiZer package:
 #'    # test.sizer = optM(folder, method = "SiZer")
 
-optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
+optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", ignore = NULL, thresh = 0.05, ...){
  
     # ... are option to pass to the function 'SiZer'
 
 	# Load treemix input files
-	tbl = read.treemix(folder)
+	tbl = read.treemix(folder, orientagraph)
 	#Sys.sleep(2)
 	
 	# Setup output file name	
@@ -63,6 +65,16 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
     methods = c("SiZer", "linear", "Evanno") 
     if(!(method %in% methods)) stop("Could not find the selected 'method'.  Please check.\n")
     
+ 	# Check for correct 'ignore' parameter
+ 	if (is.null(ignore)){
+		message("All migration edges will be included.\n")
+	} else {
+		if (!is.numeric(ignore)) stop("'ignore' parameter incorrectly specified.\n")
+		is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+		if(any(is.wholenumber(ignore) == F)) stop("'ignore' parameter must only include whole numbers.\n")
+		ignore = ignore
+	}
+    
     # Check for correct setting of the 'thresh' parameter
        # 'Percent increase in log likelihood less than thresh is the optimal number of M for exponential models
     if(missing(thresh) & method == "linear"){
@@ -77,6 +89,12 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
 	# tbl = tbl[,c(4,7)] # old v0.1.1
 	if (any(is.na(tbl))) stop("Error: One or more likelihoods are \"NaN\", please check datafiles and/or repeat the treemix run!\n")
 	# colnames(tbl) <- c("M", "LnPD") # old v0.1.1
+	
+	# Remove migration edges from 'ignore' parameter
+	if (!is.null(ignore)){
+		tbl <- tbl[which(!(tbl$M %in% ignore)),]
+		if(nrow(tbl) < 3) stop("Too many migration edges removed using the 'ignore' paramter.  Adjust accordingly (>= 3 required)\n")
+	}
 	m = max(tbl[,2], na.rm = T)
 	low = min(tbl[,2], na.rm = T)
 	
@@ -294,18 +312,19 @@ optM <- function(folder, tsv = NULL, method = "Evanno", thresh = 0.05, ...){
 ###############################
 
 # Read in treemix files
-read.treemix <- function(folder){
+read.treemix <- function(folder, orientagraph){
 
 	# Check input parameters
-	if (is.null(folder) | length(folder) != 1 | !is.character(folder)) stop("No input folder correctly provided.\n")	
+	if (is.null(folder) | length(folder) != 1 | !is.character(folder)) stop("No input folder correctly provided.\n")
+  if (!is.logical(orientagraph)) stop("The option \'orientagraph\' was not set properly as T/F.\n")
 
-	# Gather .llik, .modelcov.gz, and .cov.gz output files form treemix
+	# Gather .llik, .modelcov.gz, and .cov.gz output files from treemix
 	files.lik = sort(list.files(path = folder, pattern = "\\.llik", full.names = F))
         files.mcov = sort(list.files(path = folder, pattern = "\\.modelcov\\.gz", full.names = F))
         files.cov = sort(list.files(path = folder, pattern = "\\.cov\\.gz", full.names = F))
 
         # Check that the number of files are found for each and the names match.
-        if (length(files.lik) != length(files.mcov) | length(files.lik) != length(files.cov) | length(files.cov) != length(files.mcov)) stop("No input files not correctly identified.  The number of .llik, .modelcov, and .cov files do not match!.\n")
+        if (length(files.lik) != length(files.mcov) | length(files.lik) != length(files.cov) | length(files.cov) != length(files.mcov)) stop("Input files not correctly identified.  The number of .llik, .modelcov, and .cov files do not match!.\n")
 
         len = length(files.lik)
         stem = c(files.lik, files.mcov, files.cov)
@@ -326,8 +345,12 @@ read.treemix <- function(folder){
 		if (size.lik == 0) stop("At least one of the .llik files is empty. Check results\n")
 		if (size.mcov == 0) stop("At least one of the .modelcov.gz files is empty. Check results\n")
 		if (size.cov == 0) stop("At least one of the .cov.gz files is empty. Check results\n")
-                id = paste0(folder, "/", stem[i], ".llik")
-		tbl = rbind(tbl, cbind(rep(stem[i],2),utils::read.table(id, header = F, sep = " ")[,c(4,7)]))
+    id = paste0(folder, "/", stem[i], ".llik")
+		if (!orientagraph) tbl = rbind(tbl, cbind(rep(stem[i],2),utils::read.table(id, header = F, sep = " ")[,c(4, 7)]))
+    if (orientagraph) {
+      tmp <- utils::read.table(id, header = F, sep = " ")
+      tbl = rbind(tbl, cbind(rep(stem[i], 2), tmp[c(1, nrow(tmp)),c(5, 3)]))
+    }
 	}
         colnames(tbl) = c("Stem", "M", "LnPD")
 	
