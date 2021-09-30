@@ -1,16 +1,17 @@
 citHeader("To cite optM in publications use:")
 
 citEntry(entry = "Article",
-  title        = "optM: an R package to optimize the number of migration edges using threshold models",
+  title        = "OptM: estimating the optimal number of migration edges on population trees using Treemix",
   author       = personList(as.person("Robert R. Fitak")),
-  journal      = "submitted",
+  journal      = "Biology Methods and Protocols",
   year         = "2021",
-  volume       = "na",
-  number       = "na",
-  pages        = "na",
+  volume       = "6",
+  number       = "1",
+  pages        = "bpab017",
+  doi          = "10.1093/biomethods/bpab017",
 
   textVersion  =
-  paste("Fitak, R. R. (submitted).",
-        "optM: an R package to optimize the number of migration edges using threshold models.",
-        "TBD")
+  paste("Fitak, R. R. (2021).",
+        "OptM: estimating the optimal number of migration edges on population trees using Treemix.",
+        "Biology Methods and Protocols 6(1):bpab017. doi: 10.1093/biomethods/bpab017")
 )

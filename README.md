@@ -69,6 +69,8 @@ done
   
 
 # Version History
+- Version 0.1.6, 2021/9/30
+  * Updated citation for OptM
 - Version 0.1.5, 2021/7/9
   * Added capability to work with OrientAGraph output. Thanks Cui Wang!
 - Version 0.1.4, 2019/7/1
@@ -85,7 +87,7 @@ done
 
 
 ## Citation
-Fitak, R. R. (2021) optM: an R package to optimize the number of migration edges using threshold models. [in prep]
+Fitak, R. R. (2021) OptM: estimating the optimal number of migration edges on population trees using Treemix. Biology Methods and Protocols. 6(1):bpab017.
 
 - Or enter the command `citation("OptM")` into your R console
 
