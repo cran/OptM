@@ -1,9 +1,9 @@
-b1dcfb8a17682dde090baa34d37e6148 *DESCRIPTION
+e2775abd2b21015f8c543ed03be11eaf *DESCRIPTION
 2ad2cfb7f8a895ea89026940679cca86 *NAMESPACE
-adafd0ff22ce8b2174422d796995197e *R/optM.R
-92aad8d4d7ae9e140fac1ad77d8160dd *R/plot_optM.R
-fc45e0a5ed3c5e9bacb8fbb4886fce74 *README.md
-1b1a91df18a19544759604245dd53581 *inst/CITATION
+bcb5ecb95bff998840bbcd72635f237d *R/optM.R
+07cbb4bdac91b56b4edac6b5c96e45e4 *R/plot_optM.R
+6ae6410c211b6880cdf4ecacd4d4d2a9 *README.md
+f0cb7788b91e7f21f2b9c7d3b7716ebf *inst/CITATION
 65a88a49eb74ed65e59872106177a4ef *inst/extdata/M3.1.1.cov.gz
 97348a8e925830f9fe1cda4cf9d75317 *inst/extdata/M3.1.1.llik
 25ecc7540f347ee160e9206a01d84185 *inst/extdata/M3.1.1.modelcov.gz

@@ -56,7 +56,6 @@ done
 - Finally, plot the results:
   * `plot_optM(test.optM, method = "Evanno")`
   
-  
 - Alternatively, run using various linear modeling estimates rather than the _ad hoc_ statistic:
   * `folder <- system.file("extdata", package = "OptM")`
   * `test.linear = optM(folder, method = "linear")`
@@ -69,6 +68,14 @@ done
   
 
 # Version History
+- Version 0.1.8, 2024/6/16
+  * In order to submit to CRAN, had to make a few updates.
+  * Converted the old CITATION functions from `citEntry` to `bibentry`.
+  * Removed calls to "Imports" `boots` and `splines` in the DESCRIPTION since these packages were not explicitly referenced.
+  * Changed `if(class(input) != "SiZer") stop("Input object is not of class SiZer.\n")` to ` if(!"SiZer" %in% class(input)) stop("Input object is not of class SiZer.\n")` in case an object inherited multiple classes.
+  * Updated `tidy` on my Mac OSX using `brew install tidy-html5` to the *tidy* v5.8.0 library.  This fixed some HTML warnings that were specific to Macs.
+- Version 0.1.7, 2023/9/14
+  * Updated `read.table` to `read.delim`, and added the option `strip.white = TRUE` to `read.delim`.  This should fix some errors when reading files from orientagraph, since for some reason OrientaGraph added an empty space to lines in the .llik files when m=0, but not to other lines.  This generated an error: "***Error in scan(file = file, what = what, sep = sep, quote = quote, dec = dec, :  line 2 did not have 8 elements***"
 - Version 0.1.6, 2021/9/30
   * Updated citation for OptM
 - Version 0.1.5, 2021/7/9

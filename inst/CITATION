@@ -1,8 +1,8 @@
 citHeader("To cite optM in publications use:")
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "OptM: estimating the optimal number of migration edges on population trees using Treemix",
-  author       = personList(as.person("Robert R. Fitak")),
+  author       = as.person("Robert R. Fitak"),
   journal      = "Biology Methods and Protocols",
   year         = "2021",
   volume       = "6",

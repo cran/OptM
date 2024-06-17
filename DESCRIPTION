@@ -1,6 +1,6 @@
 Package: OptM
 Title: Estimating the Optimal Number of Migration Edges from 'Treemix'
-Version: 0.1.6
+Version: 0.1.8
 Authors@R: person("Robert", "Fitak", email = "rfitak9@gmail.com", role = c("aut", "cre"))
 Description: The popular population genetic software 'Treemix' by
     'Pickrell and Pritchard' (2012) <DOI:10.1371/journal.pgen.1002967>
@@ -18,9 +18,9 @@ Depends: R (>= 3.2.2)
 License: GPL (>= 2)
 Encoding: UTF-8
 NeedsCompilation: no
-Imports: SiZer (>= 0.1-4), stats, splines, grDevices, boot (>= 1.3-20)
-Date: 2021-9-30
+Imports: SiZer (>= 0.1-4), stats, grDevices
+Date: 2024-6-16
 Repository: CRAN
-RoxygenNote: 7.1.1.9001
-Packaged: 2021-09-30 20:08:32 UTC; rfitak
-Date/Publication: 2021-09-30 20:40:05 UTC
+RoxygenNote: 7.3.1
+Packaged: 2024-06-17 03:06:07 UTC; rfitak
+Date/Publication: 2024-06-17 03:50:02 UTC

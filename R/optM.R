@@ -346,9 +346,9 @@ read.treemix <- function(folder, orientagraph){
 		if (size.mcov == 0) stop("At least one of the .modelcov.gz files is empty. Check results\n")
 		if (size.cov == 0) stop("At least one of the .cov.gz files is empty. Check results\n")
     id = paste0(folder, "/", stem[i], ".llik")
-		if (!orientagraph) tbl = rbind(tbl, cbind(rep(stem[i],2),utils::read.table(id, header = F, sep = " ")[,c(4, 7)]))
+		if (!orientagraph) tbl = rbind(tbl, cbind(rep(stem[i],2),utils::read.delim(id, header = F, sep = " ", strip.white = TRUE)[,c(4, 7)]))
     if (orientagraph) {
-      tmp <- utils::read.table(id, header = F, sep = " ")
+      tmp <- utils::read.delim(id, header = F, sep = " ", strip.white = TRUE)
       tbl = rbind(tbl, cbind(rep(stem[i], 2), tmp[c(1, nrow(tmp)),c(5, 3)]))
     }
 	}

@@ -263,7 +263,7 @@ plot_optM <- function(input, method = "Evanno", plot = TRUE, pdf = NULL ){
 	   
 	} else if (method == "SiZer"){
 	   message("Plotting the treemix results using SiZer.\n")
-	   if(class(input) != "SiZer") stop("Input object is not of class SiZer.\n")
+	   if(!"SiZer" %in% class(input)) stop("Input object is not of class SiZer.\n")
 	   if(plot){
 	   	plot(input, xlab = "m (migration edges)")
 	    if(!is.null(pdf)){
