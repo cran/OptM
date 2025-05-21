@@ -6,7 +6,7 @@
 #' @param tsv a string defining the name of the tab-delimited output file.
 #' If NULL (default), then no data file is produced.
 #' @param method a string containing the method to use, either "Evanno", "linear", or "SiZer".  Default is "Evanno".
-#' @param ignore a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (ignore = 0).  Default is NULL.
+#' @param skip a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (skip = 0).  Default is NULL. Used to be called "ignore", which is now deprecated.
 #' @param thresh a numeric value between 0 and 1 for the threshold to use for the proportion of increase
 #' in likelihood that defines when a plateau is reached.  Default is 0.05 (5\%), only applicable for method = "linear".
 #' @param ... other options sent to the function "SiZer" - see the R package 'SiZer'
@@ -41,7 +41,7 @@
 #' # To view the results from the SiZer package:
 #'    # test.sizer = optM(folder, method = "SiZer")
 
-optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", ignore = NULL, thresh = 0.05, ...){
+optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", skip = NULL, thresh = 0.05, ...){
  
     # ... are option to pass to the function 'SiZer'
 
@@ -65,14 +65,14 @@ optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", ignore
     methods = c("SiZer", "linear", "Evanno") 
     if(!(method %in% methods)) stop("Could not find the selected 'method'.  Please check.\n")
     
- 	# Check for correct 'ignore' parameter
- 	if (is.null(ignore)){
+ 	# Check for correct 'skip' parameter
+ 	if (is.null(skip)){
 		message("All migration edges will be included.\n")
 	} else {
-		if (!is.numeric(ignore)) stop("'ignore' parameter incorrectly specified.\n")
+		if (!is.numeric(skip)) stop("'skip' parameter incorrectly specified.\n")
 		is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
-		if(any(is.wholenumber(ignore) == F)) stop("'ignore' parameter must only include whole numbers.\n")
-		ignore = ignore
+		if(any(is.wholenumber(skip) == F)) stop("'skip' parameter must only include whole numbers.\n")
+		skip = skip
 	}
     
     # Check for correct setting of the 'thresh' parameter
@@ -90,10 +90,10 @@ optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", ignore
 	if (any(is.na(tbl))) stop("Error: One or more likelihoods are \"NaN\", please check datafiles and/or repeat the treemix run!\n")
 	# colnames(tbl) <- c("M", "LnPD") # old v0.1.1
 	
-	# Remove migration edges from 'ignore' parameter
-	if (!is.null(ignore)){
-		tbl <- tbl[which(!(tbl$M %in% ignore)),]
-		if(nrow(tbl) < 3) stop("Too many migration edges removed using the 'ignore' paramter.  Adjust accordingly (>= 3 required)\n")
+	# Remove migration edges from 'skip' parameter
+	if (!is.null(skip)){
+		tbl <- tbl[which(!(tbl$M %in% skip)),]
+		if(nrow(tbl) < 3) stop("Too many migration edges removed using the 'skip' parameter.  Adjust accordingly (>= 3 required)\n")
 	}
 	m = max(tbl[,2], na.rm = T)
 	low = min(tbl[,2], na.rm = T)
@@ -287,15 +287,22 @@ optM <- function(folder, orientagraph = F, tsv = NULL, method = "Evanno", ignore
 	   delta.m = abs(l2m)/data.list$sdLm
 	
 	   message("Finished calculating delta m.\n")
-	   message(paste("The maximum value for delta m was ", 
-		   round(max(delta.m, na.rm  = T), 4)," at m = ", which.max(delta.m) - 1, 
-		   " edges.\n", sep = ""))
-	   #Sys.sleep(2)
+	   
+	   # Deprecated starting in 1.9
+	   # message(paste("The maximum value for delta m was ", 
+		   # round(max(delta.m, na.rm  = T), 4)," at m = ", which.max(delta.m) - 1, 
+		   # " edges.\n", sep = ""))
 	
 	   # Create output table
 	   out = cbind(data.summary, l1m, l1msd, l1m.min, l1m.max, l2m, l2msd, l2m.min, l2m.max, delta.m, f, sdf)
 	   colnames(out) = c("m", "runs", "mean(Lm)", "sd(Lm)", "min(Lm)", "max(Lm)", "L'(m)", "sdL'(m)", "minL'(m)", "maxL'(m)", "L''(m)", "sdL''(m)", "minL''(m)", "maxL''(m)", "Deltam", "mean(f)", "sd(f)")
 	   out = as.data.frame(out)
+	   
+	   # Report otput
+	   message(paste("The maximum value for delta m was ", 
+	    round(max(out$Deltam, na.rm  = T), 4)," at m = ", out$m[which.max(out$Deltam)], 
+	    " edges.\n", sep = ""))
+	   
 	   if (!is.null(tsv)){
 	   utils::write.table(out, file = tsv, quote = F, row.names = F, sep = "\t", dec = ".")
 	   message(paste("Output table ", tsv, " was written to the current directory.\n", sep = ""))

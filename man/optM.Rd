@@ -9,7 +9,7 @@ optM(
   orientagraph = F,
   tsv = NULL,
   method = "Evanno",
-  ignore = NULL,
+  skip = NULL,
   thresh = 0.05,
   ...
 )
@@ -24,7 +24,7 @@ If NULL (default), then no data file is produced.}
 
 \item{method}{a string containing the method to use, either "Evanno", "linear", or "SiZer".  Default is "Evanno".}
 
-\item{ignore}{a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (ignore = 0).  Default is NULL.}
+\item{skip}{a numeric vector of whole numbers indicating migration edges to ignore.  Useful when running Treemix on a prebuilt tree (skip = 0).  Default is NULL. Used to be called "ignore", which is now deprecated.}
 
 \item{thresh}{a numeric value between 0 and 1 for the threshold to use for the proportion of increase
 in likelihood that defines when a plateau is reached.  Default is 0.05 (5\%), only applicable for method = "linear".}

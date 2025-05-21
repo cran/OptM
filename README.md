@@ -68,6 +68,9 @@ done
   
 
 # Version History
+- Version 0.1.9, 2025/5/20
+  * Fixed a bug when using the `ignore` parameter. Everything worked fine, but the incorrect optimal value for *m* was printed to the screen.
+  * Changed the `ignore` parameter to `skip`
 - Version 0.1.8, 2024/6/16
   * In order to submit to CRAN, had to make a few updates.
   * Converted the old CITATION functions from `citEntry` to `bibentry`.
